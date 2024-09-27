@@ -50,7 +50,7 @@ export class QuizService {
     Object.keys(categories).forEach(category => {
       const categoryQuestions = categories[category]; // get an array of questions of current category
 
-      if (categoryQuestions.length > 0) {
+      if (categoryQuestions.length > 0 && quizzes.length < 10) {
         const quiz: Quiz = {
           category,
           questions: categoryQuestions.splice(0, 5) // take max 5 questions per quiz 
