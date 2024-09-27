@@ -1,6 +1,7 @@
 <p>home works!</p>
 <ul>
    <li *ngFor="let quiz of quizzes">
-      <span>{{quiz}}</span>
+      <span>{{quiz.category}}</span><br>
+      <span>{{quiz.questions.length}}</span>
    </li>
 </ul>

@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { QuizService } from '../../services/quiz.service';
-import { Quiz } from '../../models/quiz.model';
 import { CommonModule } from '@angular/common';
+import { Quiz } from '../../models/quiz.model';
 
 @Component({
   selector: 'app-home',
@@ -16,15 +16,9 @@ export class HomeComponent implements OnInit {
   constructor(private quizService: QuizService) { }
 
   ngOnInit(): void {
-    this.quizService.fetchCategories().subscribe({
-      next: (categoryData) => {
-
-      }
+    this.quizService.fetchQuestions().subscribe({
+      next: (data) => this.quizzes = this.quizService.organizeQuizzes(data.results),
+      error: (error) => console.error('Error fetching questions: ', error)
     });
-  }
-
-  selectRandomCategories(categories: { id: number, name: string }[], count: number): { id: number, name: string }[] {
-    const shuffled = [...categories].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
   }
 }
