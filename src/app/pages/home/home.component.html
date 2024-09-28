@@ -3,5 +3,6 @@
    <li *ngFor="let quiz of quizzes">
       <span>{{quiz.category}}</span><br>
       <span>{{quiz.questions.length}}</span>
+      <button [routerLink]="['/play', quiz.id]">Play</button>
    </li>
 </ul>

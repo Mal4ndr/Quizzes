@@ -7,53 +7,57 @@ import { Quiz } from '../models/quiz.model';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
+import { v4 as uuidv4 } from 'uuid';
+
 @Injectable({
   providedIn: 'root'
 })
 export class QuizService {
+  private quizzes: Quiz[] = [];
 
   constructor(private http: HttpClient) { }
 
   // Fetch max amount of questions
-  fetchQuestions(): Observable<{ results: Question[] }> {
+  public fetchQuestions(): Observable<{ results: Question[] }> {
     return this.http.get<{ results: Question[] }>(`${environment.triviaDb.baseUrl}/api.php?amount=50`);
   }
 
-  // Organize fetched question into quizzes
-  organizeQuizzes(questions: Question[]) {
+  // Build quizzes from fetched questions 
+  public buildQuizzes(questions: Question[]) {
     const categories: { [key: string]: Question[] } = {}; // an empty object to store categorized questions
-    const quizzes: Quiz[] = []; // an array to store formed quizzes 
 
     // group questions into categories 
     this.groupQuestionsByCategory(questions, categories); // receive defined categories by reference
 
     // form the quizzes
-    this.formQuizzesFromCategories(quizzes, categories); // receive filled quizzes by reference
+    this.quizzes = [];
+    this.formQuizzesFromCategories(this.quizzes, categories); // receive filled quizzes by reference
 
-    return quizzes;
+    return this.quizzes;
   }
 
-  // Define categories
-  groupQuestionsByCategory(questions: Question[], categories: { [key: string]: Question[] }): void {
+  // Define categories and add to them appropriate questions
+  private groupQuestionsByCategory(questions: Question[], categories: { [key: string]: Question[] }): void {
     questions.forEach(question => {
-      // check if categories doesn't contain question's category, if it's not present create and initialize it
+      // check if categories don't contain question's category, if it's not present create and initialize it
       if (!categories[question.category]) {
         categories[question.category] = [];
       }
-      // if it contains, push question
+      // push question
       categories[question.category].push(question);
     });
   }
 
   // Form quizzes with 5 max questions that belong to 1 category
-  formQuizzesFromCategories(quizzes: Quiz[], categories: { [key: string]: Question[] }): void {
+  private formQuizzesFromCategories(quizzes: Quiz[], categories: { [key: string]: Question[] }): void {
     Object.keys(categories).forEach(category => {
       const categoryQuestions = categories[category]; // get an array of questions of current category
 
       if (categoryQuestions.length > 0 && quizzes.length < 10) {
         const quiz: Quiz = {
+          id: uuidv4(),
           category,
-          questions: categoryQuestions.splice(0, 5) // take max 5 questions per quiz 
+          questions: categoryQuestions.splice(0, 10) // take max 5 questions per quiz 
         };
 
         quizzes.push(quiz);
@@ -65,16 +69,22 @@ export class QuizService {
   }
 
   // Form quizzes with random questions
-  fillRemainingQuizzes(quizzes: Quiz[], categories: { [key: string]: Question[] }): void {
+  private fillRemainingQuizzes(quizzes: Quiz[], categories: { [key: string]: Question[] }): void {
     const remainingQuestions: Question[] = Object.values(categories).flat(); // get one dimensional array of questions
 
     while (quizzes.length < 10 && remainingQuestions.length >= 5) {
       const newQuiz: Quiz = {
+        id: uuidv4(),
         category: 'Mixed',
         questions: remainingQuestions.splice(0, 5)
       };
 
       quizzes.push(newQuiz);
     }
+  }
+
+  // retrieve quiz by its id
+  public getQuizById(id: string): Quiz | undefined {
+    return this.quizzes.find(quiz => quiz.id === id);
   }
 }
