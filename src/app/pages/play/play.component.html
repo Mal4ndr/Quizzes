@@ -1,2 +1,25 @@
-<p>play works!</p>
-<p>{{quiz?.category}}</p>
+<div *ngIf="quiz && quiz.questions.length > 0">
+   <h2>{{quiz.category}} Quiz</h2>
+   <p>Question {{currentQuestionIndex + 1}} of {{quiz.questions.length}}</p>
+
+   <div>
+      <p>{{currentQuestion.question}}</p>
+      <ul>
+         <li *ngFor="let answer of currentQuestion.answers">
+            <label>
+               <input type="radio" name="answer" [value]="answer" (change)="selectAnswer(answer)"
+                  [checked]="answer === selectedAnswer"
+                  [attr.aria-checked]="answer === selectedAnswer ? 'true' : 'false'">
+               {{answer}}
+            </label>
+         </li>
+      </ul>
+   </div>
+
+   <button (click)="nextQuestion()" [disabled]="!selectedAnswer">Next Question</button>
+   <button (click)="cancelQuiz()">Cancel Quiz</button>
+</div>
+
+<div *ngIf="quiz && quiz.questions.length === 0">
+   <p>No questions available for this quiz.</p>
+</div>

@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  public playRandomQuiz(): void {
+  playRandomQuiz(): void {
     const randomIndex = Math.floor(Math.random() * this.quizzes.length);
     const randomQuizId = this.quizzes[randomIndex].id;
     this.router.navigate(['/play', randomQuizId]);

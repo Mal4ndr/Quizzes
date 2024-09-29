@@ -17,12 +17,12 @@ export class QuizService {
 
   constructor(private http: HttpClient) { }
 
-  // Fetch max amount of questions
+  // Fetches max amount of questions
   public fetchQuestions(): Observable<{ results: Question[] }> {
     return this.http.get<{ results: Question[] }>(`${environment.triviaDb.baseUrl}/api.php?amount=50`);
   }
 
-  // Build quizzes from fetched questions 
+  // Builds quizzes from fetched questions 
   public buildQuizzes(questions: Question[]) {
     const categories: { [key: string]: Question[] } = {}; // an empty object to store categorized questions
 
@@ -36,7 +36,7 @@ export class QuizService {
     return this.quizzes;
   }
 
-  // Define categories and add to them appropriate questions
+  // Defines categories and add to them appropriate questions
   private groupQuestionsByCategory(questions: Question[], categories: { [key: string]: Question[] }): void {
     questions.forEach(question => {
       // check if categories don't contain question's category, if it's not present create and initialize it
@@ -48,19 +48,19 @@ export class QuizService {
     });
   }
 
-  // Form quizzes with 5 max questions that belong to 1 category
+  // Forms quizzes with 5 max questions that belong to 1 category
   private formQuizzesFromCategories(quizzes: Quiz[], categories: { [key: string]: Question[] }): void {
     Object.keys(categories).forEach(category => {
       const categoryQuestions = categories[category]; // get an array of questions of current category
 
-      if (categoryQuestions.length > 0 && quizzes.length < 10) {
-        const quiz: Quiz = {
+      if (quizzes.length < 10) {
+        const quizQuestions = categoryQuestions.slice(0, 5).map(question => ({
+          ...question,
           id: uuidv4(),
-          category,
-          questions: categoryQuestions.splice(0, 10) // take max 5 questions per quiz 
-        };
+          answers: this.shuffleAnswers([...question.incorrect_answers, question.correct_answer])
+        }));
 
-        quizzes.push(quiz);
+        quizzes.push({ id: uuidv4(), category: category, questions: quizQuestions });
       }
     });
 
@@ -68,7 +68,11 @@ export class QuizService {
     this.fillRemainingQuizzes(quizzes, categories);
   }
 
-  // Form quizzes with random questions
+  private shuffleAnswers(answers: string[]): string[] {
+    return answers.sort(() => Math.random() - 0.5); // shuffles each pair of elements considering random number 
+  }
+
+  // Forms quizzes with random questions
   private fillRemainingQuizzes(quizzes: Quiz[], categories: { [key: string]: Question[] }): void {
     const remainingQuestions: Question[] = Object.values(categories).flat(); // get one dimensional array of questions
 
@@ -83,7 +87,7 @@ export class QuizService {
     }
   }
 
-  // retrieve quiz by its id
+  // Retrieves quiz by its id
   public getQuizById(id: string): Quiz | undefined {
     return this.quizzes.find(quiz => quiz.id === id);
   }
