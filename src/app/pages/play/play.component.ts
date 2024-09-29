@@ -19,6 +19,10 @@ export class PlayComponent implements OnInit {
   correctAnswer: string | null = null;
   isAnswerSelected: boolean = false;
 
+  totalScore: number = 0;
+  totalTime: number = 0;
+  startTime!: number;
+
   constructor(
     private quizService: QuizService,
     private route: ActivatedRoute,
@@ -30,6 +34,7 @@ export class PlayComponent implements OnInit {
 
     if (quizId) {
       this.quiz = this.quizService.getQuizById(quizId) as Quiz;
+      this.startTime = Date.now();
     } else {
       this.router.navigate(['/home']);
     }
@@ -47,8 +52,16 @@ export class PlayComponent implements OnInit {
   }
 
   nextQuestion(): void {
-    // retrieve correct answer for current question 
-    this.correctAnswer = this.currentQuestion.correct_answer;
+    if (this.selectedAnswer) {
+      // check if the answer is correct
+      if (this.selectedAnswer === this.currentQuestion.correct_answer) {
+        this.totalScore++;
+      }
+
+      // retrieve correct answer for current question 
+      this.correctAnswer = this.currentQuestion.correct_answer;
+    }
+
     // reset selected answer state for next question
     this.resetStateForNextQuestion();
 
@@ -71,6 +84,13 @@ export class PlayComponent implements OnInit {
   }
 
   finishQuiz(): void {
-    this.router.navigate(['/finish']);
+    this.totalTime = Math.floor((Date.now() - this.startTime) / 1000);
+    this.router.navigate(['/finish'], {
+      state: {
+        score: this.totalScore,
+        time: this.totalTime,
+        totalQuestions: this.quiz.questions.length
+      }
+    });
   }
 }
