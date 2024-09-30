@@ -1,9 +1,9 @@
 <div>
-   <h2>Quiz Finished!</h2>
-   <p>Your score: {{ score }} points</p>
-   <p>Time taken: {{ totalTime }} seconds</p>
-   <p>Correct answers: {{ score }} out of {{ totalQuestions }}</p>
-   <p>Average time per question: {{ averageTimePerQuestion | number:'1.2-2' }} seconds</p>
-   <p>Success rate: {{ successRate | number:'1.0-2' }}%</p>
-   <button routerLink="/home">Go to Home</button>
+   <p class="fs-3">Quiz Finished!</p>
+   <p class="fs-5">Your score: {{ score }} points</p>
+   <p class="fs-5">Time taken: {{ totalTime }} seconds</p>
+   <p class="fs-5">Correct answers: {{ score }} out of {{ totalQuestions }}</p>
+   <p class="fs-5">Average time per question: {{ averageTimePerQuestion | number:'1.2-2' }} seconds</p>
+   <p class="fs-5">Success rate: {{ successRate | number:'1.0-2' }}%</p>
+   <button type="button" class="btn btn-outline-secondary" routerLink="/home">Back to Home</button>
 </div>

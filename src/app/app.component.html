@@ -1,18 +1,26 @@
-<header class="header">
-  <div class="logo">
-    <nav>
-      <a class="logo__link" routerLink="/home">
-        <span class="logo__text">Quizzes</span>
-      </a>
-    </nav>
+<header class="header bg-secondary text-white sticky-top py-4">
+  <div class="container">
+    <div class="header__logo">
+      <nav class="header__navigation">
+        <a class="header__link" routerLink="/home">
+          <span class="header__text fw-bold fs-3">Quizzes</span>
+        </a>
+      </nav>
+    </div>
   </div>
 </header>
-<main class="content">
-  <router-outlet></router-outlet>
+<main>
+  <div class="container">
+    <div class="content py-4">
+      <router-outlet />
+    </div>
+  </div>
 </main>
-<footer class="footer">
-  <span>
-    Quizzes is an application where you can answer questions
-    and review your progress.
-  </span>
+<footer class="footer bg-secondary text-white py-4">
+  <div class="container">
+    <p class="fw-semibold fs-6">
+      Quizzes is an application where you can answer questions
+      and review your progress.
+    </p>
+  </div>
 </footer>

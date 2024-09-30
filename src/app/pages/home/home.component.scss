@@ -1,0 +1,9 @@
+.bi-play {
+   font-size: 2rem; // Change this value to make the icon bigger
+   transition: color 0.3s ease; // Add smooth color transition for hover effect
+
+   &:hover {
+      cursor: pointer;
+      color: var(--bs-primary); // Use Bootstrap's primary color on hover
+   }
+}

@@ -55,6 +55,7 @@ export class QuizService {
   // Defines categories and add to them appropriate questions
   private groupQuestionsByCategory(questions: Question[], categories: { [key: string]: Question[] }): void {
     questions.forEach(question => {
+
       // check if categories don't contain question's category, if it's not present create and initialize it
       if (!categories[question.category]) {
         categories[question.category] = [];

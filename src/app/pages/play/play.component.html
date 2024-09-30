@@ -3,29 +3,42 @@
 </div>
 
 <div *ngIf="loadingError" class="error-message">
-   <h2>Sorry, we were unable to load data for the current quiz.</h2>
-   <p>You will be redirected to the home page in a few seconds...</p>
+   <p class="fs-3">Sorry, we were unable to load data for the current quiz.</p>
+   <p class="fs-5">You will be redirected to the home page in a few seconds...</p>
 </div>
 
 <div *ngIf="!loadingError && quiz && quiz.questions.length > 0">
-   <h2>{{quiz.category}} Quiz</h2>
-   <p>Question {{currentQuestionIndex + 1}} of {{quiz.questions.length}}</p>
+   <p class="fs-3">{{quiz.category}} Quiz</p>
+   <p class="fs-5">Question {{currentQuestionIndex + 1}} of {{quiz.questions.length}}</p>
 
    <div>
-      <p>{{currentQuestion.question}}</p>
+      <p class="fs-5">{{currentQuestion.question}}</p>
       <ul>
          <li *ngFor="let answer of currentQuestion.answers">
             <label>
                <input type="radio" name="answer" [value]="answer" (change)="selectAnswer(answer)"
                   [checked]="answer === selectedAnswer"
                   [attr.aria-checked]="answer === selectedAnswer ? 'true' : 'false'">
-               {{answer}}
+               <span class="fs-5 ms-2">{{answer}}</span>
             </label>
          </li>
       </ul>
    </div>
 
-   <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">Previous Question</button>
-   <button (click)="nextQuestion()" [disabled]="!selectedAnswer">Next Question</button>
-   <button (click)="cancelQuiz()">Cancel Quiz</button>
+   <div class="buttons d-flex justify-content-between">
+      <div class="question-buttons">
+         <button class="btn btn-outline-secondary prev" (click)="previousQuestion()"
+            [disabled]="currentQuestionIndex === 0">
+            &laquo;
+            Prev
+         </button>
+         <button class="btn btn-outline-secondary next" (click)="nextQuestion()" [disabled]="!selectedAnswer">
+            Next
+            &raquo;
+         </button>
+      </div>
+      <button class="btn btn-outline-secondary cancel-quiz" (click)="cancelQuiz()">
+         Cancel Quiz
+      </button>
+   </div>
 </div>

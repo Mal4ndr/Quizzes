@@ -1,17 +1,23 @@
 <app-spinner *ngIf="loading()"></app-spinner>
-<p *ngIf="errorMessage()">{{ errorMessage() }}</p>
+<div class="content__inner">
+   <p *ngIf="errorMessage()" class="fs-3">{{ errorMessage() }}</p>
 
-<div *ngIf="!loading() && quizzes().length > 0">
-   <button (click)="playRandomQuiz()">I'm lucky</button>
-   <ul>
-      <li *ngFor="let quiz of quizzes()">
-         <span>{{ quiz.category }}</span><br>
-         <span>{{ quiz.questions.length }}</span>
-         <button [routerLink]="['/play', quiz.id]">Play</button>
-      </li>
-   </ul>
-</div>
+   <div *ngIf="!loading() && quizzes().length > 0">
+      <div class="d-grid">
+         <button type="button btn-lg" class="btn btn-dark fs-5" (click)="playRandomQuiz()">I'm lucky</button>
+      </div>
+      <ul>
+         <li *ngFor="let quiz of quizzes()" class="d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start">
+               <span class="fs-3">{{ quiz.category }}</span>
+               <i class="bi bi-play" [routerLink]="['/play', quiz.id]"></i>
+            </div>
+            <span class="fs-5">Questions: {{ quiz.questions.length }}</span>
+         </li>
+      </ul>
+   </div>
 
-<div *ngIf="!loading() && quizzes().length === 0 && !errorMessage()">
-   <p>No quizzes available. Please try refreshing later.</p>
+   <div *ngIf="!loading() && quizzes().length === 0 && !errorMessage()">
+      <p>No quizzes available. Please try refreshing later.</p>
+   </div>
 </div>

@@ -1,0 +1,16 @@
+a {
+   text-decoration: none;
+   color: unset;
+}
+
+ul {
+   list-style: none;
+   padding: 0;
+   margin-top: 24px;
+}
+
+li {
+   &:not(:first-child) {
+      margin-top: 24px;
+   }
+}
