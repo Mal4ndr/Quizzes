@@ -23,6 +23,8 @@ export class PlayComponent implements OnInit {
   totalTime: number = 0;
   startTime!: number;
 
+  selectedAnswers: (string | null)[] = [];
+
   constructor(
     private quizService: QuizService,
     private route: ActivatedRoute,
@@ -35,6 +37,9 @@ export class PlayComponent implements OnInit {
     if (quizId) {
       this.quiz = this.quizService.getQuizById(quizId) as Quiz;
       this.startTime = Date.now();
+
+      // initialize selectedAnswers array with null values
+      this.selectedAnswers = new Array(this.quiz.questions.length).fill(null);
     } else {
       this.router.navigate(['/home']);
     }
@@ -49,6 +54,9 @@ export class PlayComponent implements OnInit {
   selectAnswer(answer: string): void {
     this.selectedAnswer = answer;
     this.isAnswerSelected = true;
+
+    // save the selected answer in the array
+    this.selectedAnswers[this.currentQuestionIndex] = answer;
   }
 
   nextQuestion(): void {
@@ -68,8 +76,17 @@ export class PlayComponent implements OnInit {
     // check if current question isn't the last
     if (this.currentQuestionIndex < this.quiz.questions.length - 1) {
       this.currentQuestionIndex++;
+      this.selectedAnswer = this.selectedAnswers[this.currentQuestionIndex]; // load the saved answer if it exists
     } else {
       this.finishQuiz();
+    }
+  }
+
+  previousQuestion(): void {
+    if (this.currentQuestionIndex > 0) {
+      this.currentQuestionIndex--;
+      this.selectedAnswer = this.selectedAnswers[this.currentQuestionIndex]; // load the saved answer if it exists
+      this.isAnswerSelected = !!this.selectedAnswer; // update answer selected state
     }
   }
 
@@ -85,12 +102,7 @@ export class PlayComponent implements OnInit {
 
   finishQuiz(): void {
     this.totalTime = Math.floor((Date.now() - this.startTime) / 1000);
-    this.router.navigate(['/finish'], {
-      state: {
-        score: this.totalScore,
-        time: this.totalTime,
-        totalQuestions: this.quiz.questions.length
-      }
-    });
+    this.quizService.setQuizResults(this.totalScore, this.totalTime, this.quiz.questions.length);
+    this.router.navigate(['/finish']);
   }
 }

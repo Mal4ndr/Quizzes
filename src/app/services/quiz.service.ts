@@ -15,6 +15,12 @@ import { v4 as uuidv4 } from 'uuid';
 export class QuizService {
   private quizzes: Quiz[] = [];
 
+  private quizResults: {
+    score: number;
+    totalTime: number;
+    totalQuestions: number;
+  } | null = null;
+
   constructor(private http: HttpClient) { }
 
   // Fetches max amount of questions
@@ -34,6 +40,16 @@ export class QuizService {
     this.formQuizzesFromCategories(this.quizzes, categories); // receive filled quizzes by reference
 
     return this.quizzes;
+  }
+
+  // Saves quiz results
+  public setQuizResults(score: number, totalTime: number, totalQuestions: number): void {
+    this.quizResults = { score, totalTime, totalQuestions };
+  }
+
+  // Retrieves quiz results
+  public getQuizResults() {
+    return this.quizResults;
   }
 
   // Defines categories and add to them appropriate questions

@@ -16,6 +16,8 @@
       </ul>
    </div>
 
+
+   <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">Previous Question</button>
    <button (click)="nextQuestion()" [disabled]="!selectedAnswer">Next Question</button>
    <button (click)="cancelQuiz()">Cancel Quiz</button>
 </div>

@@ -3,5 +3,7 @@
    <p>Your score: {{ score }} points</p>
    <p>Time taken: {{ totalTime }} seconds</p>
    <p>Correct answers: {{ score }} out of {{ totalQuestions }}</p>
+   <p>Average time per question: {{ averageTimePerQuestion | number:'1.2-2' }} seconds</p>
+   <p>Success rate: {{ successRate | number:'1.0-2' }}%</p>
    <button routerLink="/home">Go to Home</button>
 </div>
