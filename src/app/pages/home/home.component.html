@@ -1,9 +1,17 @@
-<p>home works!</p>
-<button (click)="playRandomQuiz()">I'm lucky</button>
-<ul>
-   <li *ngFor="let quiz of quizzes">
-      <span>{{quiz.category}}</span><br>
-      <span>{{quiz.questions.length}}</span>
-      <button [routerLink]="['/play', quiz.id]">Play</button>
-   </li>
-</ul>
+<app-spinner *ngIf="loading()"></app-spinner>
+<p *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+<div *ngIf="!loading() && quizzes().length > 0">
+   <button (click)="playRandomQuiz()">I'm lucky</button>
+   <ul>
+      <li *ngFor="let quiz of quizzes()">
+         <span>{{ quiz.category }}</span><br>
+         <span>{{ quiz.questions.length }}</span>
+         <button [routerLink]="['/play', quiz.id]">Play</button>
+      </li>
+   </ul>
+</div>
+
+<div *ngIf="!loading() && quizzes().length === 0 && !errorMessage()">
+   <p>No quizzes available. Please try refreshing later.</p>
+</div>

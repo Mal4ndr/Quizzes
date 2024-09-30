@@ -1,4 +1,13 @@
-<div *ngIf="quiz && quiz.questions.length > 0">
+<div *ngIf="quiz && quiz.questions.length === 0">
+   <p>No questions available for this quiz.</p>
+</div>
+
+<div *ngIf="loadingError" class="error-message">
+   <h2>Sorry, we were unable to load data for the current quiz.</h2>
+   <p>You will be redirected to the home page in a few seconds...</p>
+</div>
+
+<div *ngIf="!loadingError && quiz && quiz.questions.length > 0">
    <h2>{{quiz.category}} Quiz</h2>
    <p>Question {{currentQuestionIndex + 1}} of {{quiz.questions.length}}</p>
 
@@ -16,12 +25,7 @@
       </ul>
    </div>
 
-
    <button (click)="previousQuestion()" [disabled]="currentQuestionIndex === 0">Previous Question</button>
    <button (click)="nextQuestion()" [disabled]="!selectedAnswer">Next Question</button>
    <button (click)="cancelQuiz()">Cancel Quiz</button>
-</div>
-
-<div *ngIf="quiz && quiz.questions.length === 0">
-   <p>No questions available for this quiz.</p>
 </div>

@@ -18,6 +18,7 @@ export class PlayComponent implements OnInit {
   selectedAnswer: string | null = null;
   correctAnswer: string | null = null;
   isAnswerSelected: boolean = false;
+  loadingError: boolean = false;
 
   totalScore: number = 0;
   totalTime: number = 0;
@@ -36,10 +37,19 @@ export class PlayComponent implements OnInit {
 
     if (quizId) {
       this.quiz = this.quizService.getQuizById(quizId) as Quiz;
-      this.startTime = Date.now();
 
-      // initialize selectedAnswers array with null values
-      this.selectedAnswers = new Array(this.quiz.questions.length).fill(null);
+      if (!this.quiz) {
+        // show loading error
+        this.loadingError = true;
+
+        // redirect after a few seconds
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 5000); // 5 seconds delay
+        return;
+      }
+
+      this.startTime = Date.now();
     } else {
       this.router.navigate(['/home']);
     }
