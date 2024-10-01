@@ -30,10 +30,13 @@ export class QuizService {
 
   // Builds quizzes from fetched questions 
   public buildQuizzes(questions: Question[]) {
+    // Decode HTML entities in the questions
+    const decodedQuestions = this.decodeHtml(questions);
+
     const categories: { [key: string]: Question[] } = {}; // an empty object to store categorized questions
 
     // group questions into categories 
-    this.groupQuestionsByCategory(questions, categories); // receive defined categories by reference
+    this.groupQuestionsByCategory(decodedQuestions, categories); // receive defined categories by reference
 
     // form the quizzes
     this.quizzes = [];
@@ -107,5 +110,21 @@ export class QuizService {
   // Retrieves quiz by its id
   public getQuizById(id: string): Quiz | undefined {
     return this.quizzes.find(quiz => quiz.id === id);
+  }
+
+  public decodeHtmlEntities(html: string): string {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+
+  public decodeHtml(questions: Question[]): Question[] {
+    return questions.map((question) => ({
+      ...question,
+      category: this.decodeHtmlEntities(question.category),
+      question: this.decodeHtmlEntities(question.question),
+      correct_answer: this.decodeHtmlEntities(question.correct_answer),
+      incorrect_answers: question.incorrect_answers.map(this.decodeHtmlEntities),
+    }));
   }
 }
